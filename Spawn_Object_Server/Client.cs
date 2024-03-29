@@ -15,6 +15,9 @@ namespace Test
 
         public TestCallout() 
         {
+            //Use this to call the spawn function on the server
+            BaseScript.TriggerServerEvent("Callout:SV:SpawnDebris", /*Add Vector 3 spawn position here*/ );
+        
             //Use this to call the delete function on the server
             //BaseScript.TriggerServerEvent("Callout:SV:DeleteDebris", _debris.NetworkId);
         }
