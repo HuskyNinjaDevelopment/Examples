@@ -1,29 +1,56 @@
-//Create menu
-UIMenu menu = new UIMenu("Ped Interaction Menu", "Pedestrian Interactions", new PointF(20f, 20f), "commonmenu", "interaction_bgd", false, false, 0.1f);
+using CitizenFX.Core;
+using static CitizenFX.Core.Native.API;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ScaleformUI.Menu;
+using System.Drawing;
 
-//Create and Add Menu Items
-UIMenuItem question1 = new UIMenuItem("Question 1...", "", ScaleformUI.Elements.SColor.Yellow, ScaleformUI.Elements.SColor.White);
-menu.AddItem(question1);
-
-UIMenuItem question2 = new UIMenuItem("Question 2...", "This is a description");
-menu.AddItem(question2);
-
-//Handle question selected
-question1.Activated += async (selectedMenu, selectedItem) =>
+namespace Example
 {
-    //Hide menu while talking to ped
-    menu.Visible = false;
+    internal class ExampleMenu: BaseScript
+    {
+        UIMenu menu;
 
-    //Show questions
-    Screen.ShowSubtitle("Officer: Question 1...", 5000);
-    await Delay(5000);
-    Screen.ShowSubtitle("Pedestrian: Answer...", 5000);
-    await Delay(5000);
+        public ExampleMenu() 
+        {
+            BuildMenu();
 
-    //Change text color
-    question1.TextColor = ScaleformUI.Elements.SColor.Gray;
-    question1.HighlightColor = ScaleformUI.Elements.SColor.White;
+            RegisterCommand("Test_Menu", new Action(() => 
+            {
+                menu.Visible = true;
+            }), false);
+        }
 
-    //Make menu visible
-    menu.Visible = true;
-};
+        private void BuildMenu() 
+        {
+            menu = new UIMenu("Example Menu", "Example Menu Description", new PointF(20f, 20f), "commonmenu", "interaction_bgd", false, false, 0.1f);
+
+            //Add Items
+            UIMenuItem menuItem1 = new UIMenuItem("Menu Item...", "Description...");
+            menu.AddItem(menuItem1);
+
+            UIMenuListItem menuListItem = new UIMenuListItem("Menu List: ", new List<dynamic>()
+            {
+                "Item 1",
+                "Item 2",
+                "Item 3"
+            }, 0);
+
+            //Event Handlers
+            menuItem1.Activated += (menu, item) =>
+            {
+                Debug.WriteLine("Im executing code when menuItem1 is selected!");
+            };
+
+            menuListItem.OnListChanged += (item, index) =>
+            {
+                var selectedItem = item.Items[index];
+
+                Debug.WriteLine($"New Item Selected for Menu List Item: {selectedItem}");
+            };
+        }
+    }
+}
